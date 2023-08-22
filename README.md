@@ -1,28 +1,46 @@
-# voyage-tasks
+# Pawsitive Health
 
-Your project's `readme` is as important to success as your code. For 
-this reason you should put as much care into its creation and maintenance
-as you would any other component of the application.
+Are you tired of writing out your pets needs by hand, directly communicating anytime anything changes? Wouldn't it be nice to have a place to share all your pets relevant information with sitters, vets, groomers and more? 
 
-If you are unsure of what should go into the `readme` let this article,
-written by an experienced Chingu, be your starting point - 
-[Keys to a well written README](https://tinyurl.com/yk3wubft).
+Welcome to Pawsitive Health! Your ultimate solution for streamlined pet management.
 
-And before we go there's "one more thing"! Once you decide what to include
-in your `readme` feel free to replace the text we've provided here.
+(Name TDB)
 
-> Own it & Make it your Own!
+![Pawsitive Health Logo](../v45-tier3-team-49/docs/assets/pawsitive_logo_small.png)
+## Table of contents
 
-## Team Documents
+- [Overview](#overview)
+  - [Screenshots](#screenshot)
+  - [Links](#links)
+- [Features](#features)
+- [Running the project](#running-the-project)
+- [The Process](#the-process)
+  - [Built with](#built-with)
+  - [What We learned](#what-we-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgments)
 
-You may find these helpful as you work together to organize your project.
-
-- [Team Project Ideas](./docs/team_project_ideas.md)
-- [Team Decision Log](./docs/team_decision_log.md)
-
-Meeting Agenda templates (located in the `/docs` directory in this repo):
-
-- Meeting - Voyage Kickoff --> ./docs/meeting-voyage_kickoff.docx
-- Meeting - App Vision & Feature Planning --> ./docs/meeting-vision_and_feature_planning.docx
-- Meeting - Sprint Retrospective, Review, and Planning --> ./docs/meeting-sprint_retrospective_review_and_planning.docx
-- Meeting - Sprint Open Topic Session --> ./docs/meeting-sprint_open_topic_session.docx
+## Overview 
+### Screenshots
+### Links
+## Features
+## Running the project
+## The Process
+- [Chingu Voyage Guide](https://chingucohorts.notion.site/Voyage-Guide-1e528dcbf1d241c9a93b4627f6f1c809)
+- [Figma](https://www.figma.com/file/flYe7l1VL9Nnam5QbccWJo/%F0%9F%93%B2Wireframes-for-mobile-UI-design-(Community)?type=design&node-id=35-0&mode=design&t=tfRV3j8NLcGHZ7l6-0)
+- [Trello](https://trello.com/b/z3mddBWH/voyage-45)
+- [Google Docs](https://drive.google.com/drive/folders/1MW9Zsd6Mx8i3dPp7lsDgIWMoIf1qu8Bu?usp=drive_link)
+> Ask for Google permissions if needed
+### Built with
+### What we Learned
+### Continued Development
+### Useful Resources
+## Authors
+- [Alexander Da Costa](https://github.com/BSMuse)
+- [Harrison Lynch](https://github.com/LynchHarrison)
+- [Kevin Kim](https://github.com/kevykim)
+- [Matt Davis](https://github.com/TeddyGavi)
+## Acknowledgments
+- [Chingu](https://www.chingu.io/)
