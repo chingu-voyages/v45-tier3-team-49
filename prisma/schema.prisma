@@ -1,24 +1,160 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl      = env("DIRECT_URL")
+  schemas = ["public", "auth", "storage"]
 }
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multischema"]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model UserImage {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int @unique
+
+  @@schema("storage")
 }
 
-model User {
+model PetImage {
+  id Int @id @default(autoincrement())
+  pet Pets @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId Int @unique
+
+  @@schema("storage")
+}
+
+model PhysicalChar {
+  id Int @id @default(autoincrement())
+  height Int?
+  weight Int?
+  color String? @db.VarChar(255)
+  uniqueChar String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  pet Pets @relation(fields: [physicalId], references: [id], onDelete: Cascade)
+  physicalId Int @unique
+  @@schema("public")
+}
+
+model HealthInfo {
+  id Int @id @default(autoincrement())
+  allergies String? @db.VarChar(255)
+  medication String? @db.VarChar(255)
+  vaccinations String? @db.VarChar(255)
+  chronicIssues String? @db.VarChar(255)
+  routineCheckup DateTime?
+  exerciseRoutine String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  pet Pets @relation(fields: [healthId], references: [id], onDelete: Cascade)
+  healthId Int @unique
+  @@schema("public")
+}
+
+model Diet {
+  id Int @id @default(autoincrement())
+  foodType String? @db.VarChar(255)
+  supplements String? @db.VarChar(255)
+  freqPerDay String? @db.VarChar(255)
+  freqPerWeek String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  pet Pets @relation(fields: [dietId], references: [id], onDelete: Cascade)
+  dietId Int @unique
+  @@schema("public")
+}
+
+model GrommingInfo {
+  id Int @id @default(autoincrement())
+  schedule String? @db.VarChar(255)
+  coatType  String? @db.VarChar(255)
+  skinCondition  String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  pet Pets @relation(fields: [groomingId], references: [id], onDelete: Cascade)
+  groomingId Int @unique
+  @@schema("public")
+}
+
+model Notes {
+  id Int @id @default(autoincrement())
+  note String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  pet Pets @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  noteId Int 
+  @@schema("public")
+}
+
+model Vets {
+  id Int @id @default(autoincrement())
+  vetName String @db.VarChar(255)
+  address String? @db.VarChar(255)
+  appointments String? @db.VarChar(255)
+  specialNotes  String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  PetInsuranceVet PetInsuranceVet[]
+  UserInsuranceVet UserInsuranceVet[]
+  @@schema("public")
+}
+
+model InsurancePolicies {
+  id Int @id @default(autoincrement())
+  policyNum String? @db.VarChar(255)
+  contact String? @db.VarChar(255)
+  emergencyDetails String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  PetInsuranceVet PetInsuranceVet[]
+  UserInsuranceVet UserInsuranceVet[]
+  @@schema("public")
+}
+
+model PetInsuranceVet {
+  pet Pets @relation(fields: [petId], references: [id], onDelete: Cascade)
+  petId Int @unique
+  vet Vets @relation(fields: [vetId], references: [id], onDelete: Cascade)
+  vetId Int @unique
+  insurance InsurancePolicies @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+  insuranceId Int @unique
+  @@id([petId, vetId, insuranceId])
+  @@schema("public")
+}
+
+model UserInsuranceVet {
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int @unique
+  vet Vets @relation(fields: [vetId], references: [id], onDelete: Cascade)
+  vetId Int @unique
+  insurance InsurancePolicies @relation(fields: [insuranceId], references: [id], onDelete: Cascade )
+  insuranceId Int @unique
+  @@id([userId, vetId, insuranceId])
+  @@schema("public")
+}
+
+model Users {
   id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  email String  @db.VarChar(255) @unique
+  username  String @db.VarChar(255) @unique
+  password String @db.VarChar(255) @unique
+  profileImg UserImage? 
+  createdAt DateTime @default(now())
+  userInsruanceVet UserInsuranceVet[]
+  pet Pets[]
+  @@schema("auth")
+}
+model Pets {
+  id Int @id @default(autoincrement())
+  petName String @db.VarChar(255)
+  gender String?
+  petImg PetImage?
+  DOB String? @db.VarChar(255)  
+  createdAt DateTime @default(now())
+  physcialId PhysicalChar?
+  healthInfo HealthInfo?
+  diet Diet?
+  grooming GrommingInfo?
+  note Notes[]
+  PetInsuranceVet PetInsuranceVet[] 
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int 
+
+  @@schema("public")
 }
