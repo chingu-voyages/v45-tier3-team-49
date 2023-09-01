@@ -1,19 +1,19 @@
 -- CreateTable
 CREATE TABLE "PhysicalChar" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "height" INTEGER,
     "weight" INTEGER,
     "color" VARCHAR(255),
     "uniqueChar" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "physicalId" UUID NOT NULL,
+    "physicalId" TEXT NOT NULL,
 
     CONSTRAINT "PhysicalChar_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "HealthInfo" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "allergies" VARCHAR(255),
     "medication" VARCHAR(255),
     "vaccinations" VARCHAR(255),
@@ -21,49 +21,49 @@ CREATE TABLE "HealthInfo" (
     "routineCheckup" TIMESTAMP(3),
     "exerciseRoutine" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "healthId" UUID NOT NULL,
+    "healthId" TEXT NOT NULL,
 
     CONSTRAINT "HealthInfo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Diet" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "foodType" VARCHAR(255),
     "supplements" VARCHAR(255),
     "freqPerDay" VARCHAR(255),
     "freqPerWeek" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "dietId" UUID NOT NULL,
+    "dietId" TEXT NOT NULL,
 
     CONSTRAINT "Diet_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "GrommingInfo" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "schedule" VARCHAR(255),
     "coatType" VARCHAR(255),
     "skinCondition" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "groomingId" UUID NOT NULL,
+    "groomingId" TEXT NOT NULL,
 
     CONSTRAINT "GrommingInfo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Notes" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "note" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "noteId" UUID NOT NULL,
+    "noteId" TEXT NOT NULL,
 
     CONSTRAINT "Notes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Vets" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "vetName" VARCHAR(255) NOT NULL,
     "address" VARCHAR(255),
     "appointments" VARCHAR(255),
@@ -75,7 +75,7 @@ CREATE TABLE "Vets" (
 
 -- CreateTable
 CREATE TABLE "InsurancePolicies" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "policyNum" VARCHAR(255),
     "contact" VARCHAR(255),
     "emergencyDetails" VARCHAR(255),
@@ -86,26 +86,27 @@ CREATE TABLE "InsurancePolicies" (
 
 -- CreateTable
 CREATE TABLE "PetInsuranceVet" (
-    "petId" UUID NOT NULL,
-    "vetId" UUID NOT NULL,
-    "insuranceId" UUID NOT NULL,
+    "petId" TEXT NOT NULL,
+    "vetId" TEXT NOT NULL,
+    "insuranceId" TEXT NOT NULL,
 
     CONSTRAINT "PetInsuranceVet_pkey" PRIMARY KEY ("petId","vetId","insuranceId")
 );
 
 -- CreateTable
 CREATE TABLE "UserInsuranceVet" (
-    "userId" UUID NOT NULL,
-    "vetId" UUID NOT NULL,
-    "insuranceId" UUID NOT NULL,
+    "userId" TEXT NOT NULL,
+    "vetId" TEXT NOT NULL,
+    "insuranceId" TEXT NOT NULL,
 
     CONSTRAINT "UserInsuranceVet_pkey" PRIMARY KEY ("userId","vetId","insuranceId")
 );
 
 -- CreateTable
 CREATE TABLE "Users" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "email" VARCHAR(255) NOT NULL,
+    "emailVerified" TIMESTAMP(3),
     "username" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -114,14 +115,49 @@ CREATE TABLE "Users" (
 );
 
 -- CreateTable
+CREATE TABLE "Account" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "refresh_token" TEXT,
+    "access_token" TEXT,
+    "expires_at" INTEGER,
+    "token_type" TEXT,
+    "scope" TEXT,
+    "id_token" TEXT,
+    "session_state" TEXT,
+
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Session" (
+    "id" TEXT NOT NULL,
+    "sessionToken" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "VerificationToken" (
+    "identifier" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "Pets" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "petName" VARCHAR(255) NOT NULL,
     "petType" VARCHAR(255) NOT NULL,
     "gender" TEXT,
     "DOB" VARCHAR(255),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" UUID NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Pets_pkey" PRIMARY KEY ("id")
 );
@@ -145,24 +181,6 @@ CREATE UNIQUE INDEX "Vets_vetName_key" ON "Vets"("vetName");
 CREATE UNIQUE INDEX "InsurancePolicies_policyNum_key" ON "InsurancePolicies"("policyNum");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PetInsuranceVet_petId_key" ON "PetInsuranceVet"("petId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PetInsuranceVet_vetId_key" ON "PetInsuranceVet"("vetId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PetInsuranceVet_insuranceId_key" ON "PetInsuranceVet"("insuranceId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "UserInsuranceVet_userId_key" ON "UserInsuranceVet"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "UserInsuranceVet_vetId_key" ON "UserInsuranceVet"("vetId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "UserInsuranceVet_insuranceId_key" ON "UserInsuranceVet"("insuranceId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
@@ -170,6 +188,18 @@ CREATE UNIQUE INDEX "Users_username_key" ON "Users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_password_key" ON "Users"("password");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- AddForeignKey
 ALTER TABLE "PhysicalChar" ADD CONSTRAINT "PhysicalChar_physicalId_fkey" FOREIGN KEY ("physicalId") REFERENCES "Pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -203,6 +233,12 @@ ALTER TABLE "UserInsuranceVet" ADD CONSTRAINT "UserInsuranceVet_vetId_fkey" FORE
 
 -- AddForeignKey
 ALTER TABLE "UserInsuranceVet" ADD CONSTRAINT "UserInsuranceVet_insuranceId_fkey" FOREIGN KEY ("insuranceId") REFERENCES "InsurancePolicies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Pets" ADD CONSTRAINT "Pets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
