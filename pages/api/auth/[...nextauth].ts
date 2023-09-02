@@ -3,15 +3,21 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prismaInstance from '../../../utils/prisma';
+import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prismaInstance),
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_AUTH_SECRET,
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
-    }),
+    //Google Provider is not currently working. Will revisit - current error below
+        // [next-auth][error][OAUTH_CALLBACK_HANDLER_ERROR] 
+        // https://next-auth.js.org/errors#oauth_callback_handler_error 
+        // Cannot read properties of undefined (reading 'findUnique') 
+        // TypeError: Cannot read properties of undefined (reading 'findUnique')
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+    // }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -19,9 +25,28 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' },
       },
       async authorize(credentials) {
-        //hard coded for testing
-        const user = { id: 1, name: "Harr", email: "harr@gmail.com"}
-        return user;
+
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Please enter an email and password')
+        }
+
+        const user = await prismaInstance.users.findUnique({
+          where: {
+            email: credentials.email
+          }
+        })
+
+        if (!user || !user?.password) {
+          throw new Error('No user found')
+        }
+
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password)
+
+        if (!passwordMatch) {
+          throw new Error('incorrect password')
+        }
+
+        return user
       }
     })
   ],
@@ -29,7 +54,6 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt"
   },
   debug: process.env.NODE_ENV === 'development',
-  
 };
 
 export default NextAuth(authOptions);
