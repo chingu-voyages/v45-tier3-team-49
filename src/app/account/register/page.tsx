@@ -1,17 +1,27 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import logo from '../../../../docs/assets/pawsitive_logo_small.png'
 
 export default function Register() {
+  const session = useSession()
+  const router = useRouter()
   const [data, setData] = useState({
     email: '',
     password: '',
     username: ''
   })
 
-  const registerUser = async e => {
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push('/account')
+    }
+  })
+
+  const registerUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     axios
       .post('/api/register', data)

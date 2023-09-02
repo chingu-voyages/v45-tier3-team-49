@@ -1,14 +1,9 @@
 'use client'
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../../pages/api/auth/[...nextauth]'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
 
-//commented out code provides a client side rendering
-//will also need 'use client' at the top
 export default function Home() {
-  // const session = await getServerSession(authOptions)
   const { data: session } = useSession()
 
   return (
