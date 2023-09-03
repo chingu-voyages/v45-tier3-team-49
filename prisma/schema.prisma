@@ -1,7 +1,8 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -9,18 +10,18 @@ generator client {
 }
 
 model PhysicalChar {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String   @id @default(cuid())
   height     Int?
   weight     Int?
   color      String?  @db.VarChar(255)
   uniqueChar String?  @db.VarChar(255)
   createdAt  DateTime @default(now())
   pet        Pets     @relation(fields: [physicalId], references: [id], onDelete: Cascade)
-  physicalId String   @unique @db.Uuid
+  physicalId String   @unique
 }
 
 model HealthInfo {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String    @id @default(cuid())
   allergies       String?   @db.VarChar(255)
   medication      String?   @db.VarChar(255)
   vaccinations    String?   @db.VarChar(255)
@@ -29,40 +30,40 @@ model HealthInfo {
   exerciseRoutine String?   @db.VarChar(255)
   createdAt       DateTime  @default(now())
   pet             Pets      @relation(fields: [healthId], references: [id], onDelete: Cascade)
-  healthId        String    @unique @db.Uuid
+  healthId        String    @unique
 }
 
 model Diet {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String   @id @default(cuid())
   foodType    String?  @db.VarChar(255)
   supplements String?  @db.VarChar(255)
   freqPerDay  String?  @db.VarChar(255)
   freqPerWeek String?  @db.VarChar(255)
   createdAt   DateTime @default(now())
   pet         Pets     @relation(fields: [dietId], references: [id], onDelete: Cascade)
-  dietId      String   @unique @db.Uuid
+  dietId      String   @unique
 }
 
 model GrommingInfo {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id            String   @id @default(cuid())
   schedule      String?  @db.VarChar(255)
   coatType      String?  @db.VarChar(255)
   skinCondition String?  @db.VarChar(255)
   createdAt     DateTime @default(now())
   pet           Pets     @relation(fields: [groomingId], references: [id], onDelete: Cascade)
-  groomingId    String   @unique @db.Uuid
+  groomingId    String   @unique
 }
 
 model Notes {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String   @id @default(cuid())
   note      String?  @db.VarChar(255)
   createdAt DateTime @default(now())
   pet       Pets     @relation(fields: [noteId], references: [id], onDelete: Cascade)
-  noteId    String   @db.Uuid
+  noteId    String
 }
 
 model Vets {
-  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String             @id @default(cuid())
   vetName          String             @unique @db.VarChar(255)
   address          String?            @db.VarChar(255)
   appointments     String?            @db.VarChar(255)
@@ -73,7 +74,7 @@ model Vets {
 }
 
 model InsurancePolicies {
-  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String             @id @default(cuid())
   policyNum        String?            @unique @db.VarChar(255)
   contact          String?            @db.VarChar(255)
   emergencyDetails String?            @db.VarChar(255)
@@ -84,38 +85,76 @@ model InsurancePolicies {
 
 model PetInsuranceVet {
   pet         Pets              @relation(fields: [petId], references: [id], onDelete: Cascade)
-  petId       String            @unique @db.Uuid
+  petId       String
   vet         Vets              @relation(fields: [vetId], references: [id], onDelete: Cascade)
-  vetId       String            @unique @db.Uuid
+  vetId       String
   insurance   InsurancePolicies @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
-  insuranceId String            @unique @db.Uuid
+  insuranceId String
 
   @@id([petId, vetId, insuranceId])
 }
 
 model UserInsuranceVet {
   user        Users             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String            @unique @db.Uuid
+  userId      String
   vet         Vets              @relation(fields: [vetId], references: [id], onDelete: Cascade)
-  vetId       String            @unique @db.Uuid
+  vetId       String
   insurance   InsurancePolicies @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
-  insuranceId String            @unique @db.Uuid
+  insuranceId String
 
   @@id([userId, vetId, insuranceId])
 }
 
 model Users {
-  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String             @id @default(cuid())
   email            String             @unique @db.VarChar(255)
+  emailVerified    DateTime?
   username         String             @unique @db.VarChar(255)
   password         String             @unique @db.VarChar(255)
   createdAt        DateTime           @default(now())
   userInsuranceVet UserInsuranceVet[]
   pet              Pets[]
+  accounts         Account[]
+  sessions         Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Pets {
-  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String            @id @default(cuid())
   petName         String            @db.VarChar(255)
   petType         String            @db.VarChar(255)
   gender          String?
@@ -128,5 +167,5 @@ model Pets {
   note            Notes[]
   PetInsuranceVet PetInsuranceVet[]
   user            Users             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String            @db.Uuid
+  userId          String
 }
