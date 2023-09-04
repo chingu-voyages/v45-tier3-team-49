@@ -1,6 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import { faker } from '@faker-js/faker'
+import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
+
+const user1Password = bcrypt.hashSync('123', 10)
+const user2Password = bcrypt.hashSync('345', 10)
 
 async function main() {
   const insurance1 = await prisma.insurancePolicies.upsert({
@@ -46,11 +50,11 @@ async function main() {
 
   const user1 = await prisma.users.upsert({
     where: { username: 'test1' },
-    update: {},
+    update: { password: user1Password },
     create: {
       username: 'test1',
       email: 'test1@test.com',
-      password: '123',
+      password: user1Password,
       pet: {
         create: {
           petName: 'sally',
@@ -120,11 +124,11 @@ async function main() {
 
   const user2 = await prisma.users.upsert({
     where: { username: 'test2' },
-    update: {}, 
+    update: { password: user2Password },
     create: {
       username: 'test2',
       email: 'test2@test.com',
-      password: '345',
+      password: user2Password,
       pet: {
         create: {
           petName: 'billy',

@@ -1,8 +1,8 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+import NextAuth, { NextAuthOptions } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import prismaInstance from '../../../utils/prisma';
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import prismaInstance from '../../../utils/prisma'
 import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
@@ -10,22 +10,21 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXT_AUTH_SECRET,
   providers: [
     //Google Provider is not currently working. Will revisit - current error below
-        // [next-auth][error][OAUTH_CALLBACK_HANDLER_ERROR] 
-        // https://next-auth.js.org/errors#oauth_callback_handler_error 
-        // Cannot read properties of undefined (reading 'findUnique') 
-        // TypeError: Cannot read properties of undefined (reading 'findUnique')
+    // [next-auth][error][OAUTH_CALLBACK_HANDLER_ERROR]
+    // https://next-auth.js.org/errors#oauth_callback_handler_error
+    // Cannot read properties of undefined (reading 'findUnique')
+    // TypeError: Cannot read properties of undefined (reading 'findUnique')
     // GoogleProvider({
     //   clientId: process.env.GOOGLE_CLIENT_ID as string,
     //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
     // }),
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'email' },
-        password: { label: 'password', type: 'password' },
+        password: { label: 'password', type: 'password' }
       },
       async authorize(credentials) {
-
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter an email and password')
         }
@@ -40,7 +39,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error('No user found')
         }
 
-        const passwordMatch = await bcrypt.compare(credentials.password, user.password)
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          user.password
+        )
 
         if (!passwordMatch) {
           throw new Error('incorrect password')
@@ -51,9 +53,9 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   session: {
-    strategy: "jwt"
+    strategy: 'jwt'
   },
-  debug: process.env.NODE_ENV === 'development',
-};
+  debug: process.env.NODE_ENV === 'development'
+}
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)

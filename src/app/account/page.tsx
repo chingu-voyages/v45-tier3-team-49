@@ -1,21 +1,95 @@
 'use client'
 
+import { Pets } from '@prisma/client'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-export default function Home() {
+async function getPets() {
+  const res = await fetch('http://localhost:3000/api/petsByUser', {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await res.json()
+  return data.pet
+}
+
+export default function Account() {
+  const basicBtnStyles = `border-xs border border-black dark:focus:ring-white-800 hover:bg-primary-grey transition-colors duration-150 hover:bg-opacity-30`
   const { data: session } = useSession()
+  const router = useRouter()
+  const [pets, setPets] = useState<Pets[]>([])
+
+  useEffect(() => {
+    getPets().then(pets => setPets(pets))
+  }, [])
 
   return (
-    <div>
-      <h1>Client Side Rendered</h1>
-      {JSON.stringify(session)}
+    <section className='mt-2 h-full w-full '>
+      <header>
+        <nav className='mx-auto flex w-11/12 justify-between'>
+          <button
+            className={`${basicBtnStyles} py-.5 rounded-lg px-3`}
+            onClick={() => router.back()}
+          >
+            back
+          </button>
+          <Link
+            href={'/account/createPet'}
+            className={`${basicBtnStyles} py-.5 rounded-lg px-3`}
+          >
+            Add Pet
+          </Link>
+        </nav>
+      </header>
+      {pets.map(({ id, petName, petType, DOB, gender }, i) => {
+        return (
+          <div
+            key={id}
+            className='mx-auto my-4 flex h-24 w-11/12 justify-between rounded-lg border border-black'
+          >
+            <div className='bg-gray m-2 rounded-lg border '>
+              image placeholder
+            </div>
+            <div className='flex flex-col items-start justify-evenly'>
+              <div className='flex space-x-4 text-lg'>
+                <div>Name: {petName}</div>
+                <div>Type: {petType}</div>
+              </div>
+              <div className='text-sm'>
+                <div>DOB: {DOB}</div>
+                <div>Gender: {gender}</div>
+              </div>
+            </div>
+            <div className='flex flex-col items-center justify-evenly'>
+              <button
+                type='button'
+                className={`mr-3 self-center rounded-lg ${basicBtnStyles} min-h-fill py-.5 border-xs px-3`}
+                onClick={() => null}
+              >
+                Details
+              </button>{' '}
+              <button
+                type='button'
+                className={`mr-3 self-center rounded-lg ${basicBtnStyles} min-h-fill py-.5 border-xs px-3`}
+                onClick={() => null}
+              >
+                Share
+              </button>
+            </div>
+          </div>
+        )
+      })}
+
       <button
-        className='w-100 flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+        className={`mb-4 rounded-lg   px-5 py-2.5 text-center text-sm font-bold  tracking-wider ${basicBtnStyles}  `}
         onClick={() => signOut()}
       >
         Sign Out
       </button>
-    </div>
+    </section>
   )
 }
