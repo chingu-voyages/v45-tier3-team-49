@@ -31,14 +31,14 @@ export default function Register() {
 
   return (
     <>
-      <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+      <div className='flex flex-col justify-center flex-1 min-h-full px-6 py-12 bg-gradient-to-b from-neon-red via-primary-grey to-primary-white lg:px-8'>
         <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
           <Image
-            className='mx-auto h-10 w-auto'
+            className='w-auto h-10 mx-auto'
             src={logo}
             alt='Your Company'
           />
-          <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
+          <h2 className='mt-10 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900'>
             Register for an account
           </h2>
         </div>
@@ -92,10 +92,10 @@ export default function Register() {
                 >
                   Password
                 </label>
-                <div className='text-sm'>
+                <div className='text-md'>
                   <a
                     href='#'
-                    className='font-semibold text-indigo-600 hover:text-indigo-500'
+                    className='font-semibold text-indigo-400 hover:text-indigo-500'
                   >
                     Forgot password?
                   </a>
@@ -118,7 +118,7 @@ export default function Register() {
             <div>
               <button
                 type='submit'
-                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                className='w-full border-xs dark:focus:ring-white-800 mb-4 rounded-lg border border-black bg-gradient-to-r from-gray-100 via-primary-grey to-primary-white px-5 py-2.5 text-center text-sm font-bold  tracking-wider hover:bg-gradient-to-br focus:outline-none focus:ring-2 focus:ring-black'
               >
                 Register
               </button>
