@@ -10,10 +10,10 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClientSingleton | undefined
 }
 
-const prismaInstance = globalForPrisma.prisma || new PrismaClient();
+const prismaInstance = globalForPrisma.prisma || new PrismaClient()
 
 if (process.env.NODE_ENV === 'production') {
-  globalForPrisma.prisma = prismaInstance;
+  globalForPrisma.prisma = prismaInstance
 }
 
-export default prismaInstance;
+export default prismaInstance

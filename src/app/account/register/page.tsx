@@ -92,10 +92,10 @@ export default function Register() {
                 >
                   Password
                 </label>
-                <div className='text-sm'>
+                <div className='text-md'>
                   <a
                     href='#'
-                    className='font-semibold text-indigo-600 hover:text-indigo-500'
+                    className='font-semibold text-indigo-400 hover:text-indigo-500'
                   >
                     Forgot password?
                   </a>
@@ -118,7 +118,7 @@ export default function Register() {
             <div>
               <button
                 type='submit'
-                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                className='border-xs dark:focus:ring-white-800 mb-4 w-full rounded-lg border border-black  px-5 py-2.5 text-center text-sm font-bold  tracking-wider hover:bg-gradient-to-br focus:outline-none focus:ring-2 focus:ring-black'
               >
                 Register
               </button>
