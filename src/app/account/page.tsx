@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 async function getPets() {
-  const res = await fetch('http://localhost:3000/api/petsByUser', {
+  const res = await fetch('api/petsByUser', {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -68,7 +68,7 @@ export default function Account() {
               <button
                 type='button'
                 className={`mr-3 self-center rounded-lg ${basicBtnStyles} min-h-fill py-.5 border-xs px-3`}
-                onClick={() => null}
+                onClick={() => router.push(`/account/${id}`)}
               >
                 Details
               </button>{' '}

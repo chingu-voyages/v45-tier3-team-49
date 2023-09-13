@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
-import Provider from '../../pages/context/AuthContext'
+import Provider from './context/AuthContext'
 
 const nunitoSans = Nunito_Sans({
   subsets: ['latin'],

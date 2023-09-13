@@ -2,12 +2,12 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import prismaInstance from '../../../utils/prisma'
+import prismaInstance from '../../../libs/prisma'
 import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prismaInstance),
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     //Google Provider is not currently working. Will revisit - current error below
     // [next-auth][error][OAUTH_CALLBACK_HANDLER_ERROR]
@@ -57,5 +57,5 @@ export const authOptions: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV === 'development'
 }
-
-export default NextAuth(authOptions)
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }

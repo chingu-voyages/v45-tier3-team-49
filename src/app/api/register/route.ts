@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import prismaInstance from '../../utils/prisma'
+import prismaInstance from '../../libs/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
