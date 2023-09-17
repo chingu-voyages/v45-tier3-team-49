@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
 import prismaInstance from '../../../libs/prisma'
 import { getServerSession } from 'next-auth'
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession()
-  const petId  = req.url?.slice(req.url.lastIndexOf('/') + 1)
+  const petId = req.url?.slice(req.url.lastIndexOf('/') + 1)
 
   if (!session) return NextResponse.error()
 
@@ -28,7 +28,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     }
   })
 
-  if(!petInfo) {
+  if (!petInfo) {
     return NextResponse.error()
   }
 

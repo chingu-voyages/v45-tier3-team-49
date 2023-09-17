@@ -1,70 +1,63 @@
 'use client'
 
-import {useRouter} from 'next/router'
-import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-function HealthRecord () {
+interface HealthRecord {
+  petId: string
+  id: string
+  allergies: string | null
+  medication: string | null
+  vaccinations: string | null
+  chronicIssues: string | null
+  routineCheckup: Date | null
+  exerciseRoutine: string | null
+  createdAt: Date
+  healthId: string
+}
 
-    const router = useRouter();
-    const {id} = router.query;
+function Health() {
+  const { petId } = useParams()
 
-    const [healthRecords, setHealthRecords] = useState([]);
+  const [healthRecord, setHealthRecord] = useState<HealthRecord | string>('')
 
-    useEffect(() => {
-        async function getHealthRecords() {
-            try {
-                const res = await fetch(`/api/healthRecords/${id}`);
-    
-                if (res.ok) {
-                    const data = await res.json();
-                    setHealthRecords(data);
-                } else {
-                    console.error('Failed to get health records');
-                } 
-            } catch(error) {
-                console.error('Error fetching health records:', error);
-            }
-
-            getHealthRecords();
+  useEffect(() => {
+    async function getHealthRecords() {
+      try {
+        const res = await fetch(`/api/healthRecords/${petId}`)
+        if (res) {
+          const data = await res.json()
+          setHealthRecord(data)
+        } else {
+          console.error('Failed to get health records')
         }
-    }, [id]);
+      } catch (error) {
+        console.error('Error fetching health records:', error)
+      }
+    }
+    getHealthRecords()
+  }, [petId])
 
-    return (
-        <div>
-            <h1>Health Categories</h1>
+  return !healthRecord ? (
+    <div>Loading...</div>
+  ) : typeof healthRecord === 'string' ? (
+    <div>{healthRecord}</div>
+  ) : (
+    <div>
+      <h1>Health</h1>
 
-            <div>
-                {healthRecords.map((record) => (
-                    <div key={record.petId}>
-                        <div>
-                            {record.pet.petName}
-                        </div>
-                        <div>
-                            {record.allergies}
-                        </div>
-                        <div>
-                            {record.medication}
-                        </div>
-                        <div>
-                            {record.vaccinations}
-                        </div>
-                        <div>
-                            {record.chronicIssues}
-                        </div>
-                        <div>
-                            {record.routineCheckup}
-                        </div>
-                        <div>
-                            {record.exerciseRoutine}
-                        </div>
-                    </div>
-                ))}
-            </div>
-            
-
+      <div>
+        <div className='text-large'>
+          <div>Allergies: {healthRecord?.allergies}</div>
+          <div>Medication: {healthRecord?.medication}</div>
+          <div>Vaccinations:{healthRecord?.vaccinations}</div>
+          <div>Chronic: {healthRecord?.chronicIssues}</div>
+          {/* <div>{healthRecord?.routineCheckup?.getUTCDate()}</div> */}
+          <div>Exercise: {healthRecord?.exerciseRoutine}</div>
         </div>
-    )
-};
+      </div>
+    </div>
+  )
+}
 
-
-export default HealthRecord;
+export default Health
