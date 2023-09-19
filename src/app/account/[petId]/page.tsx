@@ -53,9 +53,9 @@ export default function PetPage({
     }[]
   }
 
-  function onClick () {
+  function onClick() {
     router.push(`${petId}/healthrecord`)
-  };
+  }
 
   useEffect(() => {
     async function getPetDetails() {
@@ -109,11 +109,14 @@ export default function PetPage({
               Gender: <a className='font-normal'> {pet.gender}</a>
             </h2>
             {/* buttons */}
-            <div className='mt-4 flex justify-center'>
-              <button onClick={onClick} className='mr-2 rounded-lg bg-blue-500 px-4 py-2 text-white'>
+            <div className='flex justify-center mt-4'>
+              <button
+                onClick={onClick}
+                className='px-4 py-2 mr-2 text-white bg-blue-500 rounded-lg'
+              >
                 View Health Info
               </button>
-              <button className='rounded-lg bg-red-500 px-4 py-2 text-white'>
+              <button className='px-4 py-2 text-white bg-red-500 rounded-lg'>
                 Share
               </button>
             </div>
